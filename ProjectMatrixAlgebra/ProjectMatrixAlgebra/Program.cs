@@ -405,6 +405,7 @@ namespace ProjectMatrixAlgebra
                 i++;
             }
 
+
             Console.WriteLine();
 
         }
