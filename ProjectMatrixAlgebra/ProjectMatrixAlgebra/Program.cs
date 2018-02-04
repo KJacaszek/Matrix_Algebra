@@ -11,16 +11,16 @@ namespace ProjectMatrixAlgebra
         static void Main(string[] args)
         {
             List<Matrix> MatrixList = new List<Matrix>();
-            // teest Matrixs
             string text;
-            text = "5 5 5;5 5 5;6 6 6";
+            text = "5 6 9;4 5 6;1 -5 -200";
+            //text = "1 2 3;4 5 6;7 8 9";
 
             MatrixList.Add(new Matrix());
             int index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
 
             MatrixList[index].Rows = 3;
             MatrixList[index].Columns = 3   ;
-            MatrixList[index].MatrixName = "556";
+            MatrixList[index].MatrixName = "3x3";
             MatrixList[index].MatrixTab = EnterStringToIntMatrix(text, 3, 3);
 
             MatrixList.Add(new Matrix());
@@ -29,22 +29,36 @@ namespace ProjectMatrixAlgebra
             text = "2 2 2;2 2 2;2 2 2";
             MatrixList[index].Rows = 3;
             MatrixList[index].Columns = 3;
-            MatrixList[index].MatrixName = "222";
+            MatrixList[index].MatrixName = "3x3 222";
             MatrixList[index].MatrixTab = EnterStringToIntMatrix(text, 3, 3);
+
+
+            MatrixList.Add(new Matrix());
+            index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
+
+            text = "-5 8 4 31;13 54 -8 74;1 0 2 -3;-4 5 46 6";
+            MatrixList[index].Rows = 4;
+            MatrixList[index].Columns = 4;
+            MatrixList[index].MatrixName = "4x4 DET!=0";
+            MatrixList[index].MatrixTab = EnterStringToIntMatrix(text, 4, 4);
+
 
             int n;
             n = 0;
             while (n != 99)
             {
 
-                Console.WriteLine("1. Enter New Matrix\n" +
+                Console.WriteLine(
+                    "1. Enter New Matrix\n" +
                     "2. List of Matrixs\n" +
                     "3. Matrix Addidtion\n" +
                     "4. Matrix Subbtraction\n" +
                     "5. Matrix Multiplication by number\n" +
                     "6. Matrix Multiplication Matrix by Matrix\n" +
                     "7. Transpose Matrix\n" +
-                    "8. Det Matrix\n");
+                    "8. Det Matrix\n"+
+                    "9. Matrix Invers\n"
+                    );
              
 
 
@@ -83,7 +97,6 @@ namespace ProjectMatrixAlgebra
                         //text = "221 2333 3333 4444;25 46 57 68;99 190 99911 912;0 0 0 0";
 
                         MatrixList.Add(new Matrix());
-                        //int index = (MatrixList.Count == 0 ? 0 : MatrixList.Count-1);
                         index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
 
                         MatrixList[index].Rows = rows;
@@ -100,8 +113,9 @@ namespace ProjectMatrixAlgebra
 
                         ShowMatrixList(MatrixList);
 
-                        break;
+                        Console.ReadKey();
 
+                        break;
 
                     case 3:
 
@@ -113,30 +127,9 @@ namespace ProjectMatrixAlgebra
                         b = ReadNumb("Choose second Matrix:");
 
                         WriteMatrix(MatrixAddition(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
-                        /*
-                        text=Console.ReadLine();
-                        int i,j;
 
-                        int x, y;
-                        x = 0;
-                        y = 0;
+                        Console.ReadKey();
 
-                        MatrixList.Add(new Matrix());
-                        index = (MatrixList.Count - 1);
-
-                        MatrixList[index].Rows = 4;
-                        MatrixList[index].Columns = 4;
-                        MatrixList[index].MatrixName = "AdditionTest";
-                        int[,] MatrixTab = new int[4, 4];
-
-                        MatrixAddition(MatrixList[index].MatrixTab, MatrixList[index].MatrixTab);
-                        
-                        MatrixList[index].MatrixTab = MatrixTab;
-
-                        WriteMatrix(MatrixList[index].MatrixTab);
-
-
-    */
                         break;
 
 
@@ -151,6 +144,8 @@ namespace ProjectMatrixAlgebra
 
                         WriteMatrix(MatrixSubbtraction(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
 
+                        Console.ReadKey();
+
                         break;
 
                     case 5:
@@ -163,6 +158,8 @@ namespace ProjectMatrixAlgebra
                         b = ReadNumb("Enter number:");
 
                         WriteMatrix(MatrixMultiplicationByNumber(MatrixList[a].MatrixTab, b));
+
+                        Console.ReadKey();
 
                         break;
 
@@ -177,6 +174,8 @@ namespace ProjectMatrixAlgebra
 
                         WriteMatrix(MatrixMultiplication(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
 
+                        Console.ReadKey();
+
                         break;
                     case 7:
 
@@ -188,6 +187,8 @@ namespace ProjectMatrixAlgebra
 
                         WriteMatrix(MatrixTranspose(MatrixList[a].MatrixTab));
 
+                        Console.ReadKey();
+
                         break;
                     case 8:
 
@@ -198,6 +199,20 @@ namespace ProjectMatrixAlgebra
                         a = ReadNumb("Choose Matrix:");
 
                         Console.WriteLine(MatrixDeterminant(MatrixList[a].MatrixTab));
+
+                        Console.ReadKey();
+
+                        break;
+
+                    case 9:
+
+                        Console.WriteLine("Choose Matrix from list to Invers\n");
+
+                        ShowMatrixList(MatrixList);
+
+                        a = ReadNumb("Choose Matrix:");
+
+                        WriteMatrix(MatrixInverse(MatrixList[a].MatrixTab));
 
                         break;
                 }
@@ -354,7 +369,9 @@ namespace ProjectMatrixAlgebra
 
         static int MatrixDeterminant(int[,] Tab1)
         {
-            if (Tab1.GetLength(0) == Tab1.GetLength(1))
+            int i;
+
+           if (Tab1.GetLength(0) == Tab1.GetLength(1))
             {
                 if (Tab1.GetLength(0) == 1)
                     return Tab1[0, 0];
@@ -363,30 +380,85 @@ namespace ProjectMatrixAlgebra
 
                     return (Tab1[0, 0] * Tab1[1, 1] - Tab1[0, 1] * Tab1[1, 0]);
                 }
-                else if (Tab1.GetLength(1) == 3)
-                {
+                else {
+                    double det;
+                    det = 0;
+                    int Size = Tab1.GetLength(0);
+                    int[,] Temp = new int[Size -1,Size-1];
 
-                    return (Tab1[0, 0] * Tab1[1, 1] * Tab1[2, 2] +
-                           Tab1[0, 1] * Tab1[1, 2] * Tab1[2, 0] +
-                           Tab1[0, 2] * Tab1[1, 0] * Tab1[2, 1]) -
-
-                          (Tab1[0, 2] * Tab1[1, 1] * Tab1[2, 0] +
-                           Tab1[0, 1] * Tab1[1, 0] * Tab1[2, 2] +
-                           Tab1[1, 2] * Tab1[2, 1] * Tab1[0, 0]);
+                    for (i = 0; i < Size; i++)
+                    {
+                        det += Tab1[0, i] * Math.Pow(-1, 1 + i + 1) * MatrixDeterminant(MatrixComplements(Tab1,0,i));
+                    }
+                    int det2;
+                    det2 = Convert.ToInt32(det);               
+                    return det2;
                 }
-                else
-                    return 0;
+                  
             }
-            else
                 return 0;
         }
 
-        static int[,] MatrixTranspose(int[,] Tab1) {
+        static int[,] MatrixComplements(int[,] Tab1, int a, int b)
+        {
+
+            int k, l, Size, check, check2;
+            check2 = 0;
+            check = 0;
+            Size = Tab1.GetLength(0);
+            int[,] Temp = new int[Size - 1, Size - 1];
+
+
+            for (k = 0; k < Size - 1; k++)
+            {
+                if ((k == a) || (check > 0))
+                {
+                    check++;
+                    for (l = 0; l < Size - 1; l++)
+                    {
+
+                        if ((l == b) || (check2 > 0))
+                        {
+                            Temp[k, l] = Tab1[k + 1, l + 1];
+                            check2++;
+                        }
+                        else
+                        {
+                            Temp[k, l] = Tab1[k + 1, l];
+                        }
+                    }
+                    check2 = 0;
+                }
+                else
+                {
+                    for (l = 0; l < Size - 1; l++)
+                    {
+
+                        if ((l == b) || (check2 > 0))
+                        {
+                            Temp[k, l] = Tab1[k, l + 1];
+                            check2++;
+                        }
+                        else
+                        {
+                            Temp[k, l] = Tab1[k, l];
+                        }
+                    }
+                    check2 = 0;
+                }
+            }
+
+            return Temp;
+
+        }
+
+        static int[,] MatrixTranspose(int[,] Tab1)
+        {
 
             int[,] FinnalTab = new int[Tab1.GetLength(1), Tab1.GetLength(0)];
-          
+
             int i, j;
-           
+
             for (i = 0; i < Tab1.GetLength(0); i++)
             {
                 for (j = 0; j < Tab1.GetLength(1); j++)
@@ -396,15 +468,50 @@ namespace ProjectMatrixAlgebra
             }
             return FinnalTab;
         }
+
+        static double[,] MatrixTranspose(double[,] Tab1)
+        {
+
+            double[,] FinnalTab = new double[Tab1.GetLength(1), Tab1.GetLength(0)];
+
+            int i, j;
+
+            for (i = 0; i < Tab1.GetLength(0); i++)
+            {
+                for (j = 0; j < Tab1.GetLength(1); j++)
+                {
+                    FinnalTab[i, j] = Tab1[j, i];
+                }
+            }
+            return FinnalTab;
+        }
+
+        static double[,] MatrixInverse(int[,] Tab1) {
+
+            int i, j;
+
+            double[,] Inverse = new double[Tab1.GetLongLength(0), Tab1.GetLongLength(0)];
+
+            for (i = 0; i < Tab1.GetLongLength(0); i++)
+            {
+                for (j = 0; j < Tab1.GetLongLength(0); j++)
+                {
+                    Inverse[i, j] = ((1/Convert.ToDouble(MatrixDeterminant(Tab1)))*(Convert.ToDouble(MatrixDeterminant(MatrixComplements(Tab1,i,j)))));
+                    
+                }
+
+            }
+            return MatrixTranspose(Inverse);
+        }
         
         static void ShowMatrixList(List<Matrix> MatrixList) {
             int i = 0;
             foreach (Matrix show in MatrixList)
             {
                 Console.WriteLine(i+". " + show.MatrixName);
+                WriteMatrix(show.MatrixTab);
                 i++;
             }
-
 
             Console.WriteLine();
 
@@ -425,7 +532,24 @@ namespace ProjectMatrixAlgebra
                 Console.WriteLine();
             }
             Console.WriteLine();
-            Console.ReadKey();
+
+        }
+
+        static void WriteMatrix(double[,] tab)
+        {
+
+            int i, j;
+
+            for (i = 0; i < tab.GetLength(0); i++)
+            {
+                for (j = 0; j < tab.GetLength(1); j++)
+                {
+                    Console.Write(tab[i, j] + "\t");
+
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
 
         }
 
