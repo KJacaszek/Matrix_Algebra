@@ -12,12 +12,27 @@ namespace ProjectMatrixAlgebra
         {
             List<Matrix> MatrixList = new List<Matrix>();
             string text;
-            text = "5 6 9;4 5 6;1 -5 -200";
+            int a, b;
+            int RandomCount;
+            RandomCount = 0;
+            a = 0;
+            b = 0;
+
             //text = "1 2 3;4 5 6;7 8 9";
 
             MatrixList.Add(new Matrix());
             int index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
 
+            text = "9;9;9";
+            MatrixList[index].Rows = 3;
+            MatrixList[index].Columns = 1;
+            MatrixList[index].MatrixName = "3x1 9;9;9";
+            MatrixList[index].MatrixTab = EnterStringToIntMatrix(text, 3,1);
+
+            MatrixList.Add(new Matrix());
+            index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
+
+            text = "5 6 9;4 5 6;1 -5 -200";
             MatrixList[index].Rows = 3;
             MatrixList[index].Columns = 3   ;
             MatrixList[index].MatrixName = "3x3";
@@ -29,7 +44,7 @@ namespace ProjectMatrixAlgebra
             text = "2 2 2;2 2 2;2 2 2";
             MatrixList[index].Rows = 3;
             MatrixList[index].Columns = 3;
-            MatrixList[index].MatrixName = "3x3 222";
+            MatrixList[index].MatrixName = "3x3 222 DET=0";
             MatrixList[index].MatrixTab = EnterStringToIntMatrix(text, 3, 3);
 
 
@@ -49,67 +64,117 @@ namespace ProjectMatrixAlgebra
             {
 
                 Console.WriteLine(
-                    "1. Enter New Matrix\n" +
-                    "2. List of Matrixs\n" +
-                    "3. Matrix Addidtion\n" +
-                    "4. Matrix Subbtraction\n" +
-                    "5. Matrix Multiplication by number\n" +
-                    "6. Matrix Multiplication Matrix by Matrix\n" +
-                    "7. Transpose Matrix\n" +
-                    "8. Det Matrix\n"+
-                    "9. Matrix Invers\n"
+                    "1. Enter New Matrix\n"+
+                    "2. Delete Matrix\n"+
+                    "3. List of Matrixs\n" +
+                    "4. Matrix Addidtion\n" +
+                    "5. Matrix Subbtraction\n" +
+                    "6. Matrix Multiplication by number\n" +
+                    "7. Matrix Multiplication Matrix by Matrix\n" +
+                    "8. Transpose Matrix\n" +
+                    "9. Det Matrix\n"+
+                    "10. Matrix Invers\n"
                     );
-             
-
 
                 Console.WriteLine("Select number:");
                 text = Console.ReadLine();
                 Int32.TryParse(text, out n);
 
+                Console.WriteLine();
+
                 switch (n)
                 {
                     case 1:
+                        string text2;
+                        text2 = "";
 
-                        int columns;
-                        int rows;
-                        int a, b;
-                        a = 0;
-                        b = 0;
-                        string MatrixName;
+                        Console.WriteLine("Create random square Matrix?\n\nif yes type:\ty Y YES\nif no  type: whatever ");
+                        text2=Console.ReadLine();
 
-                        Console.WriteLine("Write number od rows, columns and Matrix like in Example\n4\n4\n1 2 3 4; 5 6 7 8; 9 10 11 12; 13 14 15 16\n");
+                        if ((text2 == "y") || (text2 == "Y") || (text2 == "YES")) {
+                            a = ReadNumb("Enter size:");
+                            
+                            MatrixList.Add(new Matrix());
+                            index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
+                            MatrixList[index].MatrixTab= MatrixRandom(a);
+                            MatrixList[index].Rows = a;
+                            MatrixList[index].Columns = a;
+                            MatrixList[index].MatrixName = "RandomMatrix "+RandomCount+" "+a+"x"+a;
+                        }
+                        else
+                        {
 
-                        Console.WriteLine("Name of Matrix:");
-                        MatrixName = Console.ReadLine();
+                            int columns, rows;
+                            rows = 6;
+                            columns = 6;
+                            string MatrixName;
 
-                        Console.WriteLine("Number of columns:");
-                        text = Console.ReadLine();
-                        Int32.TryParse(text, out columns);
+                            Console.WriteLine("Write number od rows, columns and Matrix like in Example\n4\n4\n1 2 3 4; 5 6 7 8; 9 10 11 12; 13 14 15 16\nspace\t-> separate numbers in column\n;\t-> separate rows\n");
 
-                        Console.WriteLine("Number of rows:");
-                        text = Console.ReadLine();
-                        Int32.TryParse(text, out rows);
+                            Console.WriteLine("Name of Matrix:");
+                            MatrixName = Console.ReadLine();
 
-                        Console.WriteLine("Enter The Matrix:");
-                        text = Console.ReadLine();
+                            while (rows > 5 || rows < 1)
+                            {
+                                rows = ReadNumb("Number of rows:");
 
-                        //Example to testing
-                        //text = "221 2333 3333 4444;25 46 57 68;99 190 99911 912;0 0 0 0";
+                                if (rows > 5)
+                                    Console.WriteLine("Max size is 5");
+                                else if (rows < 1)
+                                    Console.WriteLine("Wrong size");
+                            }
 
-                        MatrixList.Add(new Matrix());
-                        index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
+                            while ((columns > 5) || (columns < 1))
+                            {
+                                columns = ReadNumb("Number of columns:");
 
-                        MatrixList[index].Rows = rows;
-                        MatrixList[index].Columns = columns;
-                        MatrixList[index].MatrixName = MatrixName;
-                        MatrixList[index].MatrixTab = EnterStringToIntMatrix(text, rows, columns);
+                                if (columns > 5)
+                                    Console.WriteLine("Max size is 5");
+                                else if (columns < 1)
+                                    Console.WriteLine("Wrong size");
+                            }
 
-                        WriteMatrix(MatrixList[index].MatrixTab);
+                            Console.WriteLine("Enter The Matrix:");
+                            text = Console.ReadLine();
 
+                            //Example to testing
+                            //text = "221 2333 3333 4444;25 46 57 68;99 190 99911 912;0 0 0 0";
+
+                            MatrixList.Add(new Matrix());
+                            index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
+
+                            MatrixList[index].Rows = rows;
+                            MatrixList[index].Columns = columns;
+                            MatrixList[index].MatrixName = MatrixName;
+                            MatrixList[index].MatrixTab = EnterStringToIntMatrix(text, rows, columns);
+
+                            WriteMatrix(MatrixList[index].MatrixTab);
+                        }
                         Console.ReadKey();
                         break;
 
                     case 2:
+
+                        if (MatrixList.Count != 0)
+                        {
+
+                            ShowMatrixList(MatrixList);
+
+                            try
+                            {
+                                MatrixList.Remove(MatrixList[ReadNumb("Choose matrix to delete:")]);
+                            }
+                            catch (ArgumentOutOfRangeException)
+                            {
+                                Console.WriteLine("Index Out of Range\n");
+                            };
+                        }else
+                            Console.WriteLine("Please Enter Matrix first\n");
+
+                        break;
+
+
+                    case 3:
 
                         ShowMatrixList(MatrixList);
 
@@ -117,7 +182,7 @@ namespace ProjectMatrixAlgebra
 
                         break;
 
-                    case 3:
+                    case 4:
 
                         Console.WriteLine("Choose Matrix from list to addition\n");
 
@@ -126,14 +191,19 @@ namespace ProjectMatrixAlgebra
                         a = ReadNumb("Choose first Matrix:");
                         b = ReadNumb("Choose second Matrix:");
 
-                        WriteMatrix(MatrixAddition(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
+                        if ((MatrixList[a].Rows == MatrixList[b].Rows) && (MatrixList[a].Columns == MatrixList[b].Columns))
+                        {
 
+                            WriteMatrix(MatrixAddition(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
+                        }
+                        else
+                            Console.WriteLine("Choosen Matrices must have the same size");
                         Console.ReadKey();
 
                         break;
 
 
-                    case 4:
+                    case 5:
 
                         Console.WriteLine("Choose Matrix from list to subtract\n");
 
@@ -142,13 +212,19 @@ namespace ProjectMatrixAlgebra
                         a = ReadNumb("Choose first Matrix:");
                         b = ReadNumb("Choose second Matrix:");
 
-                        WriteMatrix(MatrixSubbtraction(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
+                        if ((MatrixList[a].Rows == MatrixList[b].Rows) && (MatrixList[a].Columns == MatrixList[b].Columns))
+                        {
+
+                            WriteMatrix(MatrixSubbtraction(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
+                        }
+                        else
+                            Console.WriteLine("Choosen Matrices must have the same size");
 
                         Console.ReadKey();
 
                         break;
 
-                    case 5:
+                    case 6:
 
                         Console.WriteLine("Choose Matrix from list and enter number to Multiply\n");
 
@@ -163,7 +239,7 @@ namespace ProjectMatrixAlgebra
 
                         break;
 
-                    case 6:
+                    case 7:
 
                         Console.WriteLine("Choose Matrix from list to Multiply\n");
 
@@ -172,25 +248,30 @@ namespace ProjectMatrixAlgebra
                         a = ReadNumb("Choose first Matrix:");
                         b = ReadNumb("Choose second Matrix:");
 
-                        WriteMatrix(MatrixMultiplication(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
+                        if ((MatrixList[a].Columns == MatrixList[b].Rows))
+                        {
+                            WriteMatrix(MatrixMultiplication(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
+                        }
+                        else
+                            Console.WriteLine("Number Columns in first Matrix must be the same like number Rows in second Matrix");
 
                         Console.ReadKey();
 
                         break;
-                    case 7:
+                    case 8:
 
                         Console.WriteLine("Choose Matrix from list to Transpose\n");
 
                         ShowMatrixList(MatrixList);
 
-                        a = ReadNumb("Choose first Matrix:");
+                        a = ReadNumb("Choose Matrix:");
 
                         WriteMatrix(MatrixTranspose(MatrixList[a].MatrixTab));
 
                         Console.ReadKey();
 
                         break;
-                    case 8:
+                    case 9:
 
                         Console.WriteLine("Choose Matrix from list to calculate Determinant\n");
 
@@ -198,13 +279,18 @@ namespace ProjectMatrixAlgebra
 
                         a = ReadNumb("Choose Matrix:");
 
-                        Console.WriteLine(MatrixDeterminant(MatrixList[a].MatrixTab));
+                        if ((MatrixList[a].Columns == MatrixList[a].Rows))
+                        {
+                            Console.WriteLine(MatrixDeterminant(MatrixList[a].MatrixTab));
+                        }
+                        else
+                            Console.WriteLine("Matrix must be square");
 
                         Console.ReadKey();
 
                         break;
 
-                    case 9:
+                    case 10:
 
                         Console.WriteLine("Choose Matrix from list to Invers\n");
 
@@ -227,6 +313,7 @@ namespace ProjectMatrixAlgebra
             private String matrixName;
             private int rows, columns;
             private int[,] matrixTab;
+            
 
             public string MatrixName { get => matrixName; set => matrixName = value; }
             public int Rows { get => rows; set => rows = value; }
@@ -235,21 +322,48 @@ namespace ProjectMatrixAlgebra
 
 
         }
+        /*
+        class Properties : Matrix
+        {
 
+            public bool isSingular;
+
+            public Properties() {
+
+                if (MatrixDeterminant(MatrixTab) == 0)
+                {
+                    isSingular = true;
+
+                } else
+                    isSingular = false;
+
+            }
+
+        }
+        */
         static int ReadNumb(string text) {
             int Numb;
+            Numb = 0;
             Console.WriteLine(text);
-            text = Console.ReadLine();
-            Int32.TryParse(text, out Numb );
+            bool check;
+            check = false;
+            while (!check)
+            {
+                    text = Console.ReadLine();
+                    if(Int32.TryParse(text, out Numb))
+                      return Numb;
+                    else
+                        Console.WriteLine("It is not a Integer");
+                }
+            
             return Numb;
-
         }
 
         static int[,] EnterStringToIntMatrix(string text, int rows, int columns)
         {
 
-            int[,] MatrixTab = new int[columns, rows];
-            int i, j, row, column, number;
+            int[,] MatrixTab = new int[rows, columns];
+            int i, row, column, number;
             string cache;
             cache = "";
             row = 0;
@@ -261,8 +375,9 @@ namespace ProjectMatrixAlgebra
                 if (text[i] != ' ' && text[i] != ';')
                 {
                     cache += text[i];
-                    Int32.TryParse(cache, out number);
 
+                    Int32.TryParse(cache, out number);
+                    
                     MatrixTab[row, column] = number;
                 }
                 else if (text[i] == ';')
@@ -284,19 +399,18 @@ namespace ProjectMatrixAlgebra
 
         static int[,] MatrixAddition(int[,] Tab1, int[,] Tab2)
         {
-            int i, j;
-            int[,] Tab3 = new int[Tab1.GetLength(0), Tab1.GetLength(0)];
-            for (i = 0; i < Tab1.GetLength(0); i++)
-            {
-                for (j = 0; j < Tab1.GetLength(1); j++)
+
+                int i, j;
+                int[,] Tab3 = new int[Tab1.GetLength(0), Tab1.GetLength(0)];
+                for (i = 0; i < Tab1.GetLength(0); i++)
                 {
-                    Tab3[i, j] = Tab1[i, j] + Tab2[i, j];
-                };
+                    for (j = 0; j < Tab1.GetLength(1); j++)
+                    {
+                        Tab3[i, j] = Tab1[i, j] + Tab2[i, j];
+                    };
 
-            }
-            return Tab3;
-
-
+                }
+                return Tab3;            
         }
 
         static int[,] MatrixSubbtraction(int[,] Tab1, int[,] Tab2)
@@ -502,6 +616,21 @@ namespace ProjectMatrixAlgebra
 
             }
             return MatrixTranspose(Inverse);
+        }
+
+        static int[,] MatrixRandom(int x) {
+
+            int[,] Tab1 = new int[x,x];
+            int i, j;
+            Random rnd = new Random();
+            for (i = 0; i < x; i++) {
+                for (j = 0; j < x; j++) {
+                    Tab1[i,j]= rnd.Next(-100,100);
+                };
+            };
+            return Tab1;
+
+
         }
         
         static void ShowMatrixList(List<Matrix> MatrixList) {
