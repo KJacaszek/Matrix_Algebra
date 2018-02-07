@@ -14,6 +14,8 @@ namespace ProjectMatrixAlgebra
             string text;
             int a, b;
             int RandomCount;
+            bool loop;
+            loop = false;
             RandomCount = 0;
             a = 0;
             b = 0;
@@ -22,12 +24,12 @@ namespace ProjectMatrixAlgebra
 
             MatrixList.Add(new Matrix());
             int index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
-
+           
             text = "9;9;9";
             MatrixList[index].Rows = 3;
             MatrixList[index].Columns = 1;
             MatrixList[index].MatrixName = "3x1 9;9;9";
-            MatrixList[index].MatrixTab = EnterStringToIntMatrix(text, 3,1);
+            MatrixList[index].setMatrixTab(EnterStringToIntMatrix(text, 3, 1));
 
             MatrixList.Add(new Matrix());
             index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
@@ -36,7 +38,7 @@ namespace ProjectMatrixAlgebra
             MatrixList[index].Rows = 3;
             MatrixList[index].Columns = 3   ;
             MatrixList[index].MatrixName = "3x3";
-            MatrixList[index].MatrixTab = EnterStringToIntMatrix(text, 3, 3);
+            MatrixList[index].setMatrixTab(EnterStringToIntMatrix(text, 3, 3));
 
             MatrixList.Add(new Matrix());
             index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
@@ -45,7 +47,7 @@ namespace ProjectMatrixAlgebra
             MatrixList[index].Rows = 3;
             MatrixList[index].Columns = 3;
             MatrixList[index].MatrixName = "3x3 222 DET=0";
-            MatrixList[index].MatrixTab = EnterStringToIntMatrix(text, 3, 3);
+            MatrixList[index].setMatrixTab(EnterStringToIntMatrix(text, 3, 3));
 
 
             MatrixList.Add(new Matrix());
@@ -55,7 +57,7 @@ namespace ProjectMatrixAlgebra
             MatrixList[index].Rows = 4;
             MatrixList[index].Columns = 4;
             MatrixList[index].MatrixName = "4x4 DET!=0";
-            MatrixList[index].MatrixTab = EnterStringToIntMatrix(text, 4, 4);
+            MatrixList[index].setMatrixTab(EnterStringToIntMatrix(text, 4, 4));
 
 
             int n;
@@ -73,7 +75,8 @@ namespace ProjectMatrixAlgebra
                     "7. Matrix Multiplication Matrix by Matrix\n" +
                     "8. Transpose Matrix\n" +
                     "9. Det Matrix\n"+
-                    "10. Matrix Invers\n"
+                    "10. Matrix Invers\n"+
+                    "11. Matrix Division\n"
                     );
 
                 Console.WriteLine("Select number:");
@@ -88,18 +91,21 @@ namespace ProjectMatrixAlgebra
                         string text2;
                         text2 = "";
 
-                        Console.WriteLine("Create random square Matrix?\n\nif yes type:\ty Y YES\nif no  type: whatever ");
+                        Console.WriteLine("Create random square Matrix?\n\nif yes type:\ty Y  yes YES\nif no  type: whatever ");
                         text2=Console.ReadLine();
 
-                        if ((text2 == "y") || (text2 == "Y") || (text2 == "YES")) {
+                        if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes")) {
                             a = ReadNumb("Enter size:");
                             
                             MatrixList.Add(new Matrix());
                             index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
-                            MatrixList[index].MatrixTab= MatrixRandom(a);
+                            MatrixList[index].setMatrixTab(MatrixRandom(a));
                             MatrixList[index].Rows = a;
                             MatrixList[index].Columns = a;
                             MatrixList[index].MatrixName = "RandomMatrix "+RandomCount+" "+a+"x"+a;
+
+                            Console.WriteLine(MatrixList[index].MatrixName);
+                            WriteMatrix(MatrixList[index].MatrixTab);
                         }
                         else
                         {
@@ -137,16 +143,13 @@ namespace ProjectMatrixAlgebra
                             Console.WriteLine("Enter The Matrix:");
                             text = Console.ReadLine();
 
-                            //Example to testing
-                            //text = "221 2333 3333 4444;25 46 57 68;99 190 99911 912;0 0 0 0";
-
                             MatrixList.Add(new Matrix());
                             index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
 
                             MatrixList[index].Rows = rows;
                             MatrixList[index].Columns = columns;
                             MatrixList[index].MatrixName = MatrixName;
-                            MatrixList[index].MatrixTab = EnterStringToIntMatrix(text, rows, columns);
+                            MatrixList[index].setMatrixTab(EnterStringToIntMatrix(text, rows, columns));
 
                             WriteMatrix(MatrixList[index].MatrixTab);
                         }
@@ -162,7 +165,7 @@ namespace ProjectMatrixAlgebra
 
                             try
                             {
-                                MatrixList.Remove(MatrixList[ReadNumb("Choose matrix to delete:")]);
+                                MatrixList.Remove(MatrixList[ReadNumb("Choose matrix to delete:", MatrixList.Count)]);
                             }
                             catch (ArgumentOutOfRangeException)
                             {
@@ -187,19 +190,32 @@ namespace ProjectMatrixAlgebra
                         Console.WriteLine("Choose Matrix from list to addition\n");
 
                         ShowMatrixList(MatrixList);
+                        
+                        loop = false;
 
-                        a = ReadNumb("Choose first Matrix:");
-                        b = ReadNumb("Choose second Matrix:");
-
-                        if ((MatrixList[a].Rows == MatrixList[b].Rows) && (MatrixList[a].Columns == MatrixList[b].Columns))
+                        while (!loop)
                         {
+                            a = ReadNumb("Choose first Matrix:", MatrixList.Count);
+                            b = ReadNumb("Choose second Matrix:", MatrixList.Count);
 
-                            WriteMatrix(MatrixAddition(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
+                            if ((MatrixList[a].Rows == MatrixList[b].Rows) && (MatrixList[a].Columns == MatrixList[b].Columns))
+                            {
+                                loop = true;
+                                WriteMatrix(MatrixAddition(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
+                            }
+                            else
+                            {
+                                Console.WriteLine("Choosen Matrices must have the same size\n");
+                                Console.WriteLine("Do you want to break?\n\nif yes type:\ty Y  yes YES\nif no  type: whatever ");
+                                text2 = Console.ReadLine();
+
+                                if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes"))
+                                {
+                                    goto case 3;
+                                }
+                            }
+                            Console.ReadKey();
                         }
-                        else
-                            Console.WriteLine("Choosen Matrices must have the same size");
-                        Console.ReadKey();
-
                         break;
 
 
@@ -209,19 +225,33 @@ namespace ProjectMatrixAlgebra
 
                         ShowMatrixList(MatrixList);
 
-                        a = ReadNumb("Choose first Matrix:");
-                        b = ReadNumb("Choose second Matrix:");
+                        loop = false;
 
-                        if ((MatrixList[a].Rows == MatrixList[b].Rows) && (MatrixList[a].Columns == MatrixList[b].Columns))
+                        while (!loop)
                         {
 
-                            WriteMatrix(MatrixSubbtraction(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
+                            a = ReadNumb("Choose first Matrix:",MatrixList.Count);
+                            b = ReadNumb("Choose second Matrix:", MatrixList.Count);
+
+                            if ((MatrixList[a].Rows == MatrixList[b].Rows) && (MatrixList[a].Columns == MatrixList[b].Columns))
+                            {
+                                loop = true;
+                                WriteMatrix(MatrixSubbtraction(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
+                            }
+                            else
+                            {
+                                Console.WriteLine("Choosen Matrices must have the same size");
+
+                                Console.WriteLine("Do you want to break?\n\nif yes type:\ty Y  yes YES\nif no  type: whatever ");
+                                text2 = Console.ReadLine();
+
+                                if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes"))
+                                {
+                                    goto case 5;
+                                }
+                            }
+                            Console.ReadKey();
                         }
-                        else
-                            Console.WriteLine("Choosen Matrices must have the same size");
-
-                        Console.ReadKey();
-
                         break;
 
                     case 6:
@@ -230,7 +260,7 @@ namespace ProjectMatrixAlgebra
 
                         ShowMatrixList(MatrixList);
 
-                        a = ReadNumb("Choose first Matrix:");
+                        a = ReadNumb("Choose first Matrix:", MatrixList.Count);
                         b = ReadNumb("Enter number:");
 
                         WriteMatrix(MatrixMultiplicationByNumber(MatrixList[a].MatrixTab, b));
@@ -245,18 +275,32 @@ namespace ProjectMatrixAlgebra
 
                         ShowMatrixList(MatrixList);
 
-                        a = ReadNumb("Choose first Matrix:");
-                        b = ReadNumb("Choose second Matrix:");
+                        loop = false;
 
-                        if ((MatrixList[a].Columns == MatrixList[b].Rows))
+                        while (!loop)
                         {
-                            WriteMatrix(MatrixMultiplication(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
+                            a = ReadNumb("Choose first Matrix:", MatrixList.Count);
+                            b = ReadNumb("Choose second Matrix:", MatrixList.Count);
+
+                            if ((MatrixList[a].Columns == MatrixList[b].Rows))
+                            {
+                                loop = true;
+                                WriteMatrix(MatrixMultiplication(MatrixList[a].MatrixTab, MatrixList[b].MatrixTab));
+                            }
+                            else
+                            {
+                                Console.WriteLine("Number Columns in first Matrix must be the same like number Rows in second Matrix");
+
+                                Console.WriteLine("Do you want to break?\n\nif yes type:\ty Y  yes YES\nif no  type: whatever ");
+                                text2 = Console.ReadLine();
+
+                                if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes"))
+                                {
+                                    goto case 7;
+                                }
+                            }
+                            Console.ReadKey();
                         }
-                        else
-                            Console.WriteLine("Number Columns in first Matrix must be the same like number Rows in second Matrix");
-
-                        Console.ReadKey();
-
                         break;
                     case 8:
 
@@ -264,7 +308,7 @@ namespace ProjectMatrixAlgebra
 
                         ShowMatrixList(MatrixList);
 
-                        a = ReadNumb("Choose Matrix:");
+                        a = ReadNumb("Choose Matrix:", MatrixList.Count);
 
                         WriteMatrix(MatrixTranspose(MatrixList[a].MatrixTab));
 
@@ -276,18 +320,29 @@ namespace ProjectMatrixAlgebra
                         Console.WriteLine("Choose Matrix from list to calculate Determinant\n");
 
                         ShowMatrixList(MatrixList);
+                        loop = false;
 
-                        a = ReadNumb("Choose Matrix:");
-
-                        if ((MatrixList[a].Columns == MatrixList[a].Rows))
+                        while (!loop)
                         {
-                            Console.WriteLine(MatrixDeterminant(MatrixList[a].MatrixTab));
+                            a = ReadNumb("Choose Matrix:", MatrixList.Count);
+
+                            if ((MatrixList[a].Columns == MatrixList[a].Rows))
+                            {
+                                loop = true;
+                                Console.WriteLine(MatrixDeterminant(MatrixList[a].MatrixTab));
+                            }
+                            else { 
+                                Console.WriteLine("Matrix must be square");
+                                Console.WriteLine("Do you want to break?\n\nif yes type:\ty Y  yes YES\nif no  type: whatever ");
+                                text2 = Console.ReadLine();
+
+                                if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes"))
+                                {
+                                    goto case 9;
+                                }
+                            }
+                            Console.ReadKey();
                         }
-                        else
-                            Console.WriteLine("Matrix must be square");
-
-                        Console.ReadKey();
-
                         break;
 
                     case 10:
@@ -295,12 +350,75 @@ namespace ProjectMatrixAlgebra
                         Console.WriteLine("Choose Matrix from list to Invers\n");
 
                         ShowMatrixList(MatrixList);
+                        loop = false;
 
-                        a = ReadNumb("Choose Matrix:");
+                        while (!loop)
+                        {
+                            a = ReadNumb("Choose Matrix:", MatrixList.Count);
 
-                        WriteMatrix(MatrixInverse(MatrixList[a].MatrixTab));
+                            if ((MatrixList[a].Rows == MatrixList[a].Columns) &&  (MatrixDeterminant(MatrixList[a].MatrixTab) != 0))
+                            {
+                                loop = true;
+                                WriteMatrix(MatrixInverse(MatrixList[a].MatrixTab));
+                            }
+                            else
+                            {
+                                Console.WriteLine("Choosen Matrix must have the same number of rows and columns and determinant different than 0");
 
+                                Console.WriteLine("Do you want to break?\n\nif yes type:\ty Y  yes YES\nif no  type: whatever ");
+                                text2 = Console.ReadLine();
+
+                                if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes"))
+                                {
+                                    goto case 10;
+                                }
+                            }
+                            Console.ReadKey();
+                        }
                         break;
+
+                    case 11:
+
+                        Console.WriteLine("Choose Matrix from list to Division\n");
+
+                        ShowMatrixList(MatrixList);
+                        loop = false;
+
+                        while (!loop)
+                        {
+                            a = ReadNumb("Choose Matrix:", MatrixList.Count);
+                           
+                            b = ReadNumb("Choose Matrix:", MatrixList.Count);
+
+                            if (MatrixDeterminant(MatrixList[b].MatrixTab) != 0)
+                            {
+
+                                if ((MatrixList[a].Columns == MatrixList[a].Rows) && (MatrixList[b].Columns == MatrixList[b].Rows) && (MatrixList[a].Rows == MatrixList[a].Rows))
+                                {
+                                    loop = true;
+                                    WriteMatrix(MatrixMultiplication(MatrixList[a].MatrixTab, MatrixInverse(MatrixList[b].MatrixTab)));
+                                }
+                                else
+
+                                    Console.WriteLine("Choosen Matrix must have the same size");
+                            }
+                            else
+                            {
+
+                                Console.WriteLine("Second Matrix must have determinant different than 0");
+
+                                Console.WriteLine("Do you want to break?\n\nif yes type:\ty Y  yes YES\nif no  type: whatever ");
+                                text2 = Console.ReadLine();
+
+                                if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes"))
+                                {
+                                    goto case 11;
+                                }
+                                Console.ReadKey();
+                            }
+                        }
+                        break;
+
                 }
 
             }
@@ -312,36 +430,23 @@ namespace ProjectMatrixAlgebra
 
             private String matrixName;
             private int rows, columns;
-            private int[,] matrixTab;
+            protected double[,] matrixTab;
             
 
             public string MatrixName { get => matrixName; set => matrixName = value; }
             public int Rows { get => rows; set => rows = value; }
             public int Columns { get => columns; set => columns = value; }
-            public int[,] MatrixTab { get => matrixTab; set => matrixTab = value; }
+            public double[,] MatrixTab { get => matrixTab;}
 
+            public void setMatrixTab(double[,] Tab1) {
 
-        }
-        /*
-        class Properties : Matrix
-        {
-
-            public bool isSingular;
-
-            public Properties() {
-
-                if (MatrixDeterminant(MatrixTab) == 0)
-                {
-                    isSingular = true;
-
-                } else
-                    isSingular = false;
+                matrixTab = Tab1;
 
             }
-
         }
-        */
-        static int ReadNumb(string text) {
+
+        static int ReadNumb(string text, int max)
+        {
             int Numb;
             Numb = 0;
             Console.WriteLine(text);
@@ -349,20 +454,44 @@ namespace ProjectMatrixAlgebra
             check = false;
             while (!check)
             {
-                    text = Console.ReadLine();
-                    if(Int32.TryParse(text, out Numb))
-                      return Numb;
+                text = Console.ReadLine();
+                if (Int32.TryParse(text, out Numb))
+                {
+                    if ((Numb >= max) || (Numb < 0))
+                        Console.WriteLine("Out of Range");
                     else
-                        Console.WriteLine("It is not a Integer");
+                        return Numb;
                 }
-            
+                else
+                    Console.WriteLine("It is not a Integer");
+            }
+
             return Numb;
         }
 
-        static int[,] EnterStringToIntMatrix(string text, int rows, int columns)
+        static int ReadNumb(string text)
+        {
+            int Numb;
+            Numb = 0;
+            Console.WriteLine(text);
+            bool check;
+            check = false;
+            while (!check)
+            {
+                text = Console.ReadLine();
+                if (Int32.TryParse(text, out Numb))
+                    return Numb;
+                else
+                    Console.WriteLine("It is not a Integer");
+            }
+
+            return Numb;
+        }
+
+        static double[,] EnterStringToIntMatrix(string text, int rows, int columns)
         {
 
-            int[,] MatrixTab = new int[rows, columns];
+            double[,] MatrixTab = new double[rows, columns];
             int i, row, column, number;
             string cache;
             cache = "";
@@ -397,11 +526,11 @@ namespace ProjectMatrixAlgebra
 
         }
 
-        static int[,] MatrixAddition(int[,] Tab1, int[,] Tab2)
+        static double[,] MatrixAddition(double[,] Tab1, double[,] Tab2)
         {
 
                 int i, j;
-                int[,] Tab3 = new int[Tab1.GetLength(0), Tab1.GetLength(0)];
+                double[,] Tab3 = new double[Tab1.GetLength(0), Tab1.GetLength(1)];
                 for (i = 0; i < Tab1.GetLength(0); i++)
                 {
                     for (j = 0; j < Tab1.GetLength(1); j++)
@@ -413,10 +542,10 @@ namespace ProjectMatrixAlgebra
                 return Tab3;            
         }
 
-        static int[,] MatrixSubbtraction(int[,] Tab1, int[,] Tab2)
+        static double[,] MatrixSubbtraction(double[,] Tab1, double[,] Tab2)
         {
             int i, j;
-            int[,] Tab3 = new int[Tab1.GetLength(0), Tab1.GetLength(0)];
+            double[,] Tab3 = new double[Tab1.GetLength(0), Tab1.GetLength(0)];
             for (i = 0; i < Tab1.GetLength(0); i++)
             {
                 for (j = 0; j < Tab1.GetLength(1); j++)
@@ -429,11 +558,12 @@ namespace ProjectMatrixAlgebra
 
         }
 
-        static int[,] MatrixMultiplication(int[,] Tab1, int[,] Tab2)
+        static double[,] MatrixMultiplication(double[,] Tab1, double[,] Tab2)
         {
-            int i, j, k, MultipCache;
+            int i, j, k;
+            double MultipCache;
 
-            int[,] FinnalTab = new int[Tab1.GetLength(0), Tab1.GetLength(0)];
+            double[,] FinnalTab = new double[Tab1.GetLength(0), Tab1.GetLength(0)];
             for (i = 0; i < Tab1.GetLength(0); i++)
             {
                 for (j = 0; j < Tab2.GetLength(1); j++)
@@ -452,11 +582,11 @@ namespace ProjectMatrixAlgebra
 
         }
 
-        static int[,] MatrixMultiplicationByNumber(int[,] Tab1, int k)
+        static double[,] MatrixMultiplicationByNumber(double[,] Tab1, int k)
         {
             int i, j;
 
-            int[,] FinnalTab = new int[Tab1.GetLength(0), Tab1.GetLength(0)];
+            double[,] FinnalTab = new double[Tab1.GetLength(0), Tab1.GetLength(0)];
             for (i = 0; i < Tab1.GetLength(0); i++)
             {
                 for (j = 0; j < Tab1.GetLength(1); j++)
@@ -469,9 +599,9 @@ namespace ProjectMatrixAlgebra
 
         }
 
-        static int[,] MatrixExponentiation(int[,] Tab1, int n)
+        static double[,] MatrixExponentiation(double[,] Tab1, int n)
         { int i;
-            int[,] FinnalTab = new int[Tab1.GetLength(0), Tab1.GetLength(0)];
+            double[,] FinnalTab = new double[Tab1.GetLength(0), Tab1.GetLength(0)];
             FinnalTab = Tab1;
 
             for (i = 0; i < n; i++)
@@ -481,7 +611,7 @@ namespace ProjectMatrixAlgebra
 
         }
 
-        static int MatrixDeterminant(int[,] Tab1)
+        static double MatrixDeterminant(double[,] Tab1)
         {
             int i;
 
@@ -498,7 +628,7 @@ namespace ProjectMatrixAlgebra
                     double det;
                     det = 0;
                     int Size = Tab1.GetLength(0);
-                    int[,] Temp = new int[Size -1,Size-1];
+                    double[,] Temp = new double[Size -1,Size-1];
 
                     for (i = 0; i < Size; i++)
                     {
@@ -513,14 +643,14 @@ namespace ProjectMatrixAlgebra
                 return 0;
         }
 
-        static int[,] MatrixComplements(int[,] Tab1, int a, int b)
+        static double[,] MatrixComplements(double[,] Tab1, int a, int b)
         {
 
             int k, l, Size, check, check2;
             check2 = 0;
             check = 0;
             Size = Tab1.GetLength(0);
-            int[,] Temp = new int[Size - 1, Size - 1];
+            double[,] Temp = new double[Size - 1, Size - 1];
 
 
             for (k = 0; k < Size - 1; k++)
@@ -566,23 +696,6 @@ namespace ProjectMatrixAlgebra
 
         }
 
-        static int[,] MatrixTranspose(int[,] Tab1)
-        {
-
-            int[,] FinnalTab = new int[Tab1.GetLength(1), Tab1.GetLength(0)];
-
-            int i, j;
-
-            for (i = 0; i < Tab1.GetLength(0); i++)
-            {
-                for (j = 0; j < Tab1.GetLength(1); j++)
-                {
-                    FinnalTab[i, j] = Tab1[j, i];
-                }
-            }
-            return FinnalTab;
-        }
-
         static double[,] MatrixTranspose(double[,] Tab1)
         {
 
@@ -600,7 +713,7 @@ namespace ProjectMatrixAlgebra
             return FinnalTab;
         }
 
-        static double[,] MatrixInverse(int[,] Tab1) {
+        static double[,] MatrixInverse(double[,] Tab1) {
 
             int i, j;
 
@@ -610,7 +723,7 @@ namespace ProjectMatrixAlgebra
             {
                 for (j = 0; j < Tab1.GetLongLength(0); j++)
                 {
-                    Inverse[i, j] = ((1/Convert.ToDouble(MatrixDeterminant(Tab1)))*(Convert.ToDouble(MatrixDeterminant(MatrixComplements(Tab1,i,j)))));
+                    Inverse[i, j] = ((1/(MatrixDeterminant(Tab1)))*((MatrixDeterminant(MatrixComplements(Tab1,i,j)))));
                     
                 }
 
@@ -618,9 +731,9 @@ namespace ProjectMatrixAlgebra
             return MatrixTranspose(Inverse);
         }
 
-        static int[,] MatrixRandom(int x) {
+        static double[,] MatrixRandom(int x) {
 
-            int[,] Tab1 = new int[x,x];
+            double[,] Tab1 = new double[x,x];
             int i, j;
             Random rnd = new Random();
             for (i = 0; i < x; i++) {
@@ -646,24 +759,6 @@ namespace ProjectMatrixAlgebra
 
         }
 
-        static void WriteMatrix(int[,] tab)
-        {
-
-            int i, j;
-
-            for (i = 0; i < tab.GetLength(0); i++)
-            {
-                for (j = 0; j < tab.GetLength(1); j++)
-                {
-                    Console.Write(tab[i, j] + "\t");
-
-                }
-                Console.WriteLine();
-            }
-            Console.WriteLine();
-
-        }
-
         static void WriteMatrix(double[,] tab)
         {
 
@@ -673,7 +768,7 @@ namespace ProjectMatrixAlgebra
             {
                 for (j = 0; j < tab.GetLength(1); j++)
                 {
-                    Console.Write(tab[i, j] + "\t");
+                    Console.Write("\t"+tab[i, j]);
 
                 }
                 Console.WriteLine();
@@ -681,6 +776,8 @@ namespace ProjectMatrixAlgebra
             Console.WriteLine();
 
         }
+
+      
 
     }
 }
