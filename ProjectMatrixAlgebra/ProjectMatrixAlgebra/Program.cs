@@ -20,8 +20,6 @@ namespace ProjectMatrixAlgebra
             a = 0;
             b = 0;
 
-            //text = "1 2 3;4 5 6;7 8 9";
-
             MatrixList.Add(new Matrix());
             int index = (MatrixList.Count == 0 ? 0 : MatrixList.Count - 1);
            
@@ -87,6 +85,9 @@ namespace ProjectMatrixAlgebra
 
                 switch (n)
                 {
+                    case 0:
+                        Console.Clear();
+                        break;
                     case 1:
                         string text2;
                         text2 = "";
@@ -158,7 +159,7 @@ namespace ProjectMatrixAlgebra
 
                     case 2:
 
-                        if (MatrixList.Count != 0)
+                        if (MatrixList.Count > 0)
                         {
 
                             ShowMatrixList(MatrixList);
@@ -187,6 +188,12 @@ namespace ProjectMatrixAlgebra
 
                     case 4:
 
+                        if (MatrixList.Count < 1)
+                        {
+                            Console.WriteLine("Matrix list is empty\nPlease Enter Matrix first\n");
+                            goto case 1;
+                        }
+
                         Console.WriteLine("Choose Matrix from list to addition\n");
 
                         ShowMatrixList(MatrixList);
@@ -211,7 +218,7 @@ namespace ProjectMatrixAlgebra
 
                                 if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes"))
                                 {
-                                    goto case 3;
+                                    goto case 0;
                                 }
                             }
                             Console.ReadKey();
@@ -220,6 +227,12 @@ namespace ProjectMatrixAlgebra
 
 
                     case 5:
+
+                        if (MatrixList.Count < 1)
+                        {
+                            Console.WriteLine("Matrix list is empty\nPlease Enter Matrix first\n");
+                            goto case 1;
+                        }
 
                         Console.WriteLine("Choose Matrix from list to subtract\n");
 
@@ -247,7 +260,7 @@ namespace ProjectMatrixAlgebra
 
                                 if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes"))
                                 {
-                                    goto case 5;
+                                    goto case 0;
                                 }
                             }
                             Console.ReadKey();
@@ -255,6 +268,12 @@ namespace ProjectMatrixAlgebra
                         break;
 
                     case 6:
+
+                        if (MatrixList.Count < 1)
+                        {
+                            Console.WriteLine("Matrix list is empty\nPlease Enter Matrix first\n");
+                            goto case 1;
+                        }
 
                         Console.WriteLine("Choose Matrix from list and enter number to Multiply\n");
 
@@ -270,6 +289,12 @@ namespace ProjectMatrixAlgebra
                         break;
 
                     case 7:
+
+                        if (MatrixList.Count < 1)
+                        {
+                            Console.WriteLine("Matrix list is empty\nPlease Enter Matrix first\n");
+                            goto case 1;
+                        }
 
                         Console.WriteLine("Choose Matrix from list to Multiply\n");
 
@@ -296,13 +321,18 @@ namespace ProjectMatrixAlgebra
 
                                 if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes"))
                                 {
-                                    goto case 7;
+                                    goto case 0;
                                 }
                             }
                             Console.ReadKey();
                         }
                         break;
                     case 8:
+                        if (MatrixList.Count < 1)
+                        {
+                            Console.WriteLine("Matrix list is empty\nPlease Enter Matrix first\n");
+                            goto case 1;
+                        }
 
                         Console.WriteLine("Choose Matrix from list to Transpose\n");
 
@@ -316,6 +346,11 @@ namespace ProjectMatrixAlgebra
 
                         break;
                     case 9:
+                        if (MatrixList.Count < 1)
+                        {
+                            Console.WriteLine("Matrix list is empty\nPlease Enter Matrix first\n");
+                            goto case 1;
+                        }
 
                         Console.WriteLine("Choose Matrix from list to calculate Determinant\n");
 
@@ -338,7 +373,7 @@ namespace ProjectMatrixAlgebra
 
                                 if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes"))
                                 {
-                                    goto case 9;
+                                    goto case 0;
                                 }
                             }
                             Console.ReadKey();
@@ -346,6 +381,11 @@ namespace ProjectMatrixAlgebra
                         break;
 
                     case 10:
+                        if (MatrixList.Count < 1)
+                        {
+                            Console.WriteLine("Matrix list is empty\nPlease Enter Matrix first\n");
+                            goto case 1;
+                        }
 
                         Console.WriteLine("Choose Matrix from list to Invers\n");
 
@@ -370,7 +410,7 @@ namespace ProjectMatrixAlgebra
 
                                 if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes"))
                                 {
-                                    goto case 10;
+                                    goto case 0;
                                 }
                             }
                             Console.ReadKey();
@@ -378,6 +418,12 @@ namespace ProjectMatrixAlgebra
                         break;
 
                     case 11:
+                        Console.WriteLine(MatrixList.Count);
+                        if (MatrixList.Count < 1)
+                        {
+                            Console.WriteLine("Matrix list is empty\nPlease Enter Matrix first\n");
+                            goto case 1;
+                        }
 
                         Console.WriteLine("Choose Matrix from list to Division\n");
 
@@ -386,14 +432,14 @@ namespace ProjectMatrixAlgebra
 
                         while (!loop)
                         {
-                            a = ReadNumb("Choose Matrix:", MatrixList.Count);
+                            a = ReadNumb("Choose first Matrix:", MatrixList.Count);
                            
-                            b = ReadNumb("Choose Matrix:", MatrixList.Count);
+                            b = ReadNumb("Choose second Matrix:", MatrixList.Count);
 
                             if (MatrixDeterminant(MatrixList[b].MatrixTab) != 0)
                             {
 
-                                if ((MatrixList[a].Columns == MatrixList[a].Rows) && (MatrixList[b].Columns == MatrixList[b].Rows) && (MatrixList[a].Rows == MatrixList[a].Rows))
+                                if ((MatrixList[a].Columns == MatrixList[a].Rows) && (MatrixList[b].Columns == MatrixList[b].Rows) && (MatrixList[a].Rows == MatrixList[b].Rows))
                                 {
                                     loop = true;
                                     WriteMatrix(MatrixMultiplication(MatrixList[a].MatrixTab, MatrixInverse(MatrixList[b].MatrixTab)));
@@ -412,7 +458,7 @@ namespace ProjectMatrixAlgebra
 
                                 if ((text2 == "y") || (text2 == "Y") || (text2 == "YES") || (text2 == "yes"))
                                 {
-                                    goto case 11;
+                                    goto case 0;
                                 }
                                 Console.ReadKey();
                             }
