@@ -57,7 +57,6 @@ namespace ProjectMatrixAlgebra
             MatrixList[index].MatrixName = "4x4 DET!=0";
             MatrixList[index].setMatrixTab(EnterStringToIntMatrix(text, 4, 4));
 
-
             int n;
             n = 0;
             while (n != 99)
@@ -179,6 +178,12 @@ namespace ProjectMatrixAlgebra
 
 
                     case 3:
+
+                        if (MatrixList.Count < 1)
+                        {
+                            Console.WriteLine("Matrix list is empty\nPlease Enter Matrix first\n");
+                            goto case 1;
+                        }
 
                         ShowMatrixList(MatrixList);
 
@@ -678,11 +683,10 @@ namespace ProjectMatrixAlgebra
 
                     for (i = 0; i < Size; i++)
                     {
-                        det += Tab1[0, i] * Math.Pow(-1, 1 + i + 1) * MatrixDeterminant(MatrixComplements(Tab1,0,i));
+                        det += Tab1[0, i] *Math.Pow(-1,1+i+1)* MatrixDeterminant(MatrixComplements(Tab1,0,i));
                     }
-                    int det2;
-                    det2 = Convert.ToInt32(det);               
-                    return det2;
+             
+                    return det;
                 }
                   
             }
@@ -737,6 +741,13 @@ namespace ProjectMatrixAlgebra
                     check2 = 0;
                 }
             }
+            
+            for (int i = 0; i < Temp.GetLength(0); i++) {
+                for (int j = 0; j < Temp.GetLongLength(1); j++) {
+
+                    Temp[i, j] = Math.Pow(-1, i+1 + j+1) * Temp[i, j];
+                }
+            }       
 
             return Temp;
 
@@ -769,7 +780,7 @@ namespace ProjectMatrixAlgebra
             {
                 for (j = 0; j < Tab1.GetLongLength(0); j++)
                 {
-                    Inverse[i, j] = ((1/(MatrixDeterminant(Tab1)))*((MatrixDeterminant(MatrixComplements(Tab1,i,j)))));
+                    Inverse[i, j] = ((1/(MatrixDeterminant(Tab1)))*Math.Pow(-1,i+1+j+1)*((MatrixDeterminant(MatrixComplements(Tab1,i,j)))));
                     
                 }
 
